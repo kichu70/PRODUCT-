@@ -9,11 +9,13 @@ const Login = () => {
     const [username,setUsername]=useState("")
     const [password,setPassword]=useState("")
 
-    const handleLogin =()=>{
+    const handleLogin =(e)=>{
         login(username,password)
+        e.preventDefault();
     }
   return (
     <div className='login'>
+      <form>
         <h1>Login Page</h1>
       <div className="login-sub">
                 <TextField
@@ -33,8 +35,9 @@ const Login = () => {
           value={password}
           variant="standard"
         />
-        <Button variant='contained' onClick={handleLogin}> login</Button>
+        <Button type='submit' variant='contained' onClick={handleLogin}> login</Button>
       </div>
+      </form>
     </div>
   )
 }
