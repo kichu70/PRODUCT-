@@ -13,34 +13,80 @@ import { ToastContainer, toast } from "react-toastify";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Confirm from "../Confirm/Confirm";
 import Edititem from "../Edit/Edititem";
-
+import { useAuth } from "../../auth/Authcontext";
+import Addproduct from "../Addproduct/Addproduct";
+// import logo from "../../logo.svg"
+import {jwtDecode} from "jwt-decode";
 const Iteams = () => {
   const notify = () => toast("Iteam Has been deleted");
   const notify2 = () => toast("Iteam not deleted");
-  const notify3 = () => toast("dataUpdated");
   const navigate = useNavigate();
   const [item, setItem] = useState([]);
   const [openConfirm,setOpenConfirm]=useState(false)
   const [deleteId,setDeletId]=useState(null)
   const [openEdit,setopenEdit]=useState(false)
+  const[openAddProduct,setOpenAddProduct]=useState(false)
   const[editid,setEditid]=useState(null)
+  
+  const[selectProduct,setSelectProduct]=useState(null)
+  const [refresh,setRefresh]=useState(false)
+  const [userId,setUserId]=useState(null)
+  
+  const token= localStorage.getItem("token")
 
+  // --------------get user id from token---------
 
+  useEffect(()=>{
+    if(token){
+      try{
+        const decode =jwtDecode(token)//jwt-decod install to get id and  from token
+        setUserId (decode.id)
+      }
+      catch(err){
+        console.log(err,"error is in taking id from token")
+      }
+    }
+  },[token])
+    // --------refresh----------------
+
+    const reloadComponent =()=>{
+      setRefresh(prev=>!prev)
+    }
 
   // ---------------------getdata--------------------------------
-  useEffect(() => {
-    try {
-      axios("https://fakestoreapi.com/products").then((response) =>
-        setItem(response.data)
-      );
-    } catch (error) {
-      alert(error);
-      console.error(error);
+
+  useEffect(()=>{
+    const Fetchdata =async()=>{
+
+      try{
+        const res = await axios.get("https://backendofproducts.onrender.com/product/",
+          {
+            headers:{
+              Authorization:`Bearer ${token}`,
+            }
+          }
+        )
+        const idreplace =res.data.map(({_id,...rest})=>({
+          id:_id,
+          ...rest
+        }))
+        console.log(res.data)
+        setItem(idreplace)
+        
+      }
+      catch(err){
+        console.log(err,"error is in the geting function")
+      }
     }
-  }, []);
+    Fetchdata()
+  },[refresh])
   // console.log(item,"-----------------")
 
 
+// --------------additem---------------
+const handleAddproduct=()=>{
+  setOpenAddProduct(true)
+}
 
 // -------------------------delet data----------------------------
   const handleDeleteClick =(id)=>{
@@ -52,12 +98,17 @@ const Iteams = () => {
 const onhandledlete =  (id) => {
     if(!deleteId)return;
       try {
-         axios
-          .delete(`https://fakestoreapi.com/products/${deleteId}`)
-          // .then(() => setItem(item.filter((i) => i.id !== id)));
-       .then(()=> setItem(item.filter((i) => i.id !== deleteId)));
-         notify()
-         
+         const dltdata=async()=>{
+          const res =await axios.put(`https://backendofproducts.onrender.com/product/delete-product/?id=${deleteId}`,
+           {},{ headers: {
+           Authorization: `Bearer ${token}`,
+            }}
+          )
+          setItem((prev)=>prev.filter((p)=>p.id !==deleteId))  
+          console.log(res.data,"delete",token)
+          notify()
+         }
+         dltdata()
       } catch (err) {
         alert(err);
       }
@@ -70,8 +121,9 @@ const onhandledlete =  (id) => {
 
   // -----------------------------updatedata---------------------------
 
-  const hadleUpdate =(id)=>{
+  const hadleUpdate =(id,item)=>{
     setEditid(id)
+    setSelectProduct(item)
     setopenEdit(true)
   }
 
@@ -83,7 +135,7 @@ const onhandledlete =  (id) => {
       
       <div className="main">
         <h1>All Product</h1>
-        <Button variant="contained">add product</Button>
+        <Button variant="contained" onClick={handleAddproduct}>add product</Button>
       </div>
               <ToastContainer />
       <div className="gridss">
@@ -95,9 +147,9 @@ const onhandledlete =  (id) => {
                 className="CardMedia"
                 sx={{ width: "100%", objectFit: "contain" }}
                 height="240px"
-                image={item.image}
+                image={`https://backendofproducts.onrender.com/${item.image}`}
                 component="img"
-                title="green iguana"
+                 title={item.title}
               />
 
               <CardContent>
@@ -110,27 +162,30 @@ const onhandledlete =  (id) => {
                 </Typography>
                 <h3 className="price">₹ {item.price}</h3>
               </CardContent>
-              <Button
+              {/* <Button
                 className="viewbtn"
                 variant="contained"
                 onClick={() => navigate(`/viewProduct/${item.id}`)}
               >
                 View product
-              </Button>
-              <div className="btns">
+              </Button> */}
+              {item.user === userId && (
+
+                <div className="btns">
                 <Button
                   variant="contained"
                   color="error"
                   size="small"
                   onClick={() => handleDeleteClick(item.id)}
-                >
+                  >
                   delete
                 </Button>
                 <Button variant="contained" color="success" size="small"
-                onClick={()=>hadleUpdate(item.id)}>
+                onClick={()=>hadleUpdate(item.id, item)}>
                   edit
                 </Button>
               </div>
+                )}
             </Card>
           </div>
         ))}
@@ -141,25 +196,31 @@ const onhandledlete =  (id) => {
       onCancel={()=>{setOpenConfirm(false);notify2();
         setDeletId(null)
       }}/>
-      <Edititem
-      open={openEdit}
-      // id={editid}
-      productData={item.find(p => p.id === editid)}
-      onClose={()=>setopenEdit(false)} 
-      onUpdate={(updateProduct)=>{
-        setItem(prev =>prev.map(p=>p.id  === updateProduct.id ? updateProduct :p))
-     ; notify3() }}
-      />
-              {/* setItem(prev =>
-          prev.map(p => {
-            if (p.id === updateProduct.id) {
-              return updateProduct; // replace this one
-            } else {
-              return p; // keep the old one
-            }
-          })
-        ); */}
+      {openEdit&&(
 
+        <Edititem
+        open={openEdit}
+        Product={selectProduct}
+        id={editid}
+        onClose={(updatedProduct)=>{setopenEdit(false);
+          if(updatedProduct){
+            setItem(prev=>prev.map(p=>p.id ===updatedProduct._id?{id:updatedProduct._id,...updatedProduct}:p))
+            
+          }}
+        }
+    
+
+        />
+      )}
+      {openAddProduct &&(
+        <Addproduct
+        open={openAddProduct}
+        onAdd={reloadComponent}
+        onClose={()=>{setOpenAddProduct(false)
+        }}/>
+        
+
+      )}
     </div>
   );
 };

@@ -18,10 +18,19 @@ const Product = () => {
 
   const [product, setProduct] = useState([]);
   useEffect(() => {
-    axios
-      .get(`https://fakestoreapi.com/products/${id}`)
-      .then((response) => setProduct(response.data));
-    console.log(product);
+    // axios
+    //   .get(`https://backendofproducts.onrender.com/product/${id}`)
+    //   .then((response) => setProduct(response.data));
+    // console.log(product);
+
+    const viewProduct =async()=>{
+      try{
+
+      }
+      catch(err){
+        console.log(err,"this error is in the prodect view page")
+      }
+    }
   }, []);
 
   return (<div className="body">

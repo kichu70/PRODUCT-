@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '@mui/material'
 import "./Navbar.css"
 import { Navigate, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../Context/Auth'
+import { useAuth } from '../../auth/Authcontext'
 const Navbar = () => {
   const Navigate =useNavigate()
   const {logout} = useAuth()

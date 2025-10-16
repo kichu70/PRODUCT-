@@ -1,18 +1,26 @@
 import React, { useState } from 'react'
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
-import {useAuth} from  "../../Context/Auth"
 import "./Login.css"
+import axios from 'axios';
+import { useAuth } from '../../auth/Authcontext';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const {login}= useAuth();
-    const [username,setUsername]=useState("")
-    const [password,setPassword]=useState("")
-
-    const handleLogin =(e)=>{
-        login(username,password)
-        e.preventDefault();
-    }
+const[username,setUsername]=useState("")
+const[email,setEmail]=useState("")
+const[password,setPassword]=useState("")
+const{login}=useAuth()
+const navigate =useNavigate()
+  const handleLogin=async(e)=>{
+    e.preventDefault();
+   login(email,password)
+   const token =localStorage.getItem("token")
+   if(token){
+    navigate("/")
+    console.log("hello")
+   }
+  }
   return (
     <div className='login'>
       <form>
@@ -21,9 +29,9 @@ const Login = () => {
                 <TextField
           error
           id="standard-error"
-          label="username"
-          value={username}
-          onChange={(e)=>setUsername(e.target.value)}
+          label="email"
+          value={email}
+          onChange={(e)=>setEmail(e.target.value)}
 
           variant="standard"
         />

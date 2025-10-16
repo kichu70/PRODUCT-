@@ -2,61 +2,58 @@ import React, { useEffect, useRef, useState } from 'react'
 import "./Edititem.css"
 import axios from 'axios'
 import { Button, TextField } from '@mui/material'
-import { useParams } from 'react-router-dom'
+import { ToastContainer, toast } from "react-toastify";
 
-const Edititem = ({open, onClose, id,onUpdate,productData}) => {
+  
+
+const notify3 = () => toast("dataUpdated");
+
+const Edititem = ({open, onClose, id,Product}) => {
   const editboxRef = useRef()
-  const [product, setProduct] = useState([])
-
-  // const { id } = useParams(); 
-  console.log(id)
-
-  useEffect(() => {
-    // if (!id || !open) return;
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get(`https://fakestoreapi.com/products/${id}`)
-    //     setProduct(response.data)
-    //   } catch(err) {
-    //     console.log(err)
-    //   }
-    // }
-    // fetchData()     it is used to api update only 
+  const [productTitle, setProductTitle] = useState('')
+  const [productDescription, setProductDescription] = useState('')
+  const [productPrice, setProductPrice] = useState('')
+  const token =localStorage.getItem("token")
 
 
-    if(open || productData){
-      setProduct(productData)
-    }
+useEffect(()=>{
+  if(Product){
 
-    const handleClickOutside = (event) => {
-      if (editboxRef.current && !editboxRef.current.contains(event.target)) {
-        onClose()
-        setProduct({})
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [onClose, open, id])
-
-  if (!open) return null;
+    setProductTitle(Product.title||"")
+    setProductDescription(Product.description||"")
+    setProductPrice(Product.price||"")
+  }
+},[Product])
 
   const UpdateProduct = async () => {
    try{
-    // const response = await axios.put( `https://fakestoreapi.com/products/${id}`,
-    //     product)
-        // onUpdate(response.data);
-        setProduct(product)
-        onUpdate(product)
-
-        onClose()
+    const res =await axios.put(`https://backendofproducts.onrender.com/product/update-product?id=${id}`,
+      {
+        title:productTitle,
+        description:productDescription,
+        price:productPrice
+      },{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      console.log(res,id)
+        onClose(res.data.data)
    } 
-   
    catch(err){
-    alert(err)
+    alert(err,"error is it the update frontend")
    }
   }
-
+  useEffect(()=>{
+    const handleClickOutside=(event)=>{
+      if(editboxRef.current && !editboxRef.current.contains(event.target)){
+        onClose()
+      }
+    }
+     document.addEventListener("mousedown",handleClickOutside)
+     return ()=>document.removeEventListener("mousedown",handleClickOutside)
+  },[onClose])
+  
   return (
     <div className='main-edit' ref={editboxRef}>
       <Button variant='contained' className='closebtn' onClick={onClose}>X</Button>
@@ -64,48 +61,33 @@ const Edititem = ({open, onClose, id,onUpdate,productData}) => {
         <h1>Edit Product</h1>
         <div className="items">
           <TextField
-            onChange={(e) => setProduct({...product, title: e.target.value})}
-            value={product.title}
+            onChange={(e) => setProductTitle(e.target.value)}
+            value={productTitle}
             className='textEditField'
             type='text'
             label="title"
             variant="filled"
             focused
           />
+
           <TextField
-            onChange={(e) => setProduct({...product, price: e.target.value})}
-            value={product.price}
+            onChange={(e) => setProductDescription(e.target.value)}
+            value={productDescription}
+            className='textEditField'
+            label="Description"
+            variant="filled"
+            focused
+          />
+          <TextField
+            onChange={(e) => setProductPrice(e.target.value)}
+            value={productPrice}
             className='textEditField'
             label="price"
             variant="filled"
             type='number'
             focused
           />
-          <TextField
-            onChange={(e) => setProduct({...product, category: e.target.value})}
-            value={product.category}
-            className='textEditField'
-            label="Category"
-            variant="filled"
-            focused
-          />
-          <TextField
-            onChange={(e) => setProduct({...product, image: e.target.value})}
-            value={product.image}
-            className='textEditField'
-            label="Image URL"
-            variant="filled"
-            focused
-          />
-          <TextField
-            onChange={(e) => setProduct({...product, description: e.target.value})}
-            value={product.description}
-            className='textEditField'
-            label="Description"
-            variant="filled"
-            focused
-          />
-          <Button onClick={UpdateProduct} variant='contained'>update Product</Button>
+          <Button onClick={()=>{UpdateProduct();notify3()}} variant='contained'>update Product</Button>
         </div>
       </div>
     </div>

@@ -1,20 +1,23 @@
 
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Navbar from './Components/Navbar/Navbar';
 import Home from './Pages/Home';
 import ViewProduct from './Pages/ViewProduct';
-import Edititem from './Components/Edit/Edititem';
 import Login from './Components/Login/Login';
-import { useAuth } from './Context/Auth';
+import { useAuth } from './auth/Authcontext';
+import Addproduct from './Components/Addproduct/Addproduct';
+
 
 function App() {
   const { user } = useAuth();
   return (
     <div className="App">
-      {/* <Home/> */}
       <BrowserRouter>
-        {user ?(
+
+{/* <Addproduct/> */}
+
+
+        {user?(
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/viewProduct/:id' element={<ViewProduct/>}/>
