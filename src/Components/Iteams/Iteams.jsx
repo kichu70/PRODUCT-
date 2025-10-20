@@ -65,7 +65,7 @@ const Iteams = () => {
     const Fetchdata = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/product/?page=${page}&limit=4`,
+          `https://backendofproducts.onrender.com/product/?page=${page}&limit=4`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -103,7 +103,7 @@ const Iteams = () => {
     try {
       const dltdata = async () => {
         const res = await axios.put(
-          `http://localhost:5000/product/delete-product/?id=${deleteId}`,
+          `https://backendofproducts.onrender.com/product/delete-product/?id=${deleteId}`,
           {},
           {
             headers: {
@@ -161,7 +161,7 @@ const Iteams = () => {
                       className="CardMedia"
                       sx={{ width: "100%", objectFit: "contain" }}
                       height="240px"
-                      image={`http://localhost:5000/${img}`}
+                      image={`https://backendofproducts.onrender.com/${img}`}
                       component="img"
                       title={`${item.title} - ${index + 1}`}//the index +1 make the index humber to understand human eg first index  0 -> 1 , 1-> 2 etc 
                     />

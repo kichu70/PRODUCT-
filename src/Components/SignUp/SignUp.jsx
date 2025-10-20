@@ -28,7 +28,7 @@ const SignUp = () => {
                 return toast.error("passwords dont match")
             }
           
-            const res =await axios.post("http://localhost:5000/user/add-user",
+            const res =await axios.post("https://backendofproducts.onrender.com/user/add-user",
                 {
                     username,
                     email,

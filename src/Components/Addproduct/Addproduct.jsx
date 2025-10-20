@@ -25,7 +25,7 @@ const Addproduct = ({ open, onClose, onAdd, onSuccess }) => {
         formData.append("image", img);
       });
       const res = await axios.post(
-        `http://localhost:5000/product/add-product`,
+        `https://backendofproducts.onrender.com/product/add-product`,
         formData,
         {
           headers: {

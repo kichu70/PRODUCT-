@@ -27,7 +27,7 @@ useEffect(()=>{
 
   const UpdateProduct = async () => {
    try{
-    const res =await axios.put(`http://localhost:5000/product/update-product?id=${id}`,
+    const res =await axios.put(`https://backendofproducts.onrender.com/product/update-product?id=${id}`,
       {
         title:productTitle,
         description:productDescription,

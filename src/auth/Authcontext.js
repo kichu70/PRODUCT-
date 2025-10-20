@@ -19,7 +19,7 @@ export const AuthProvider =({children})=>{
 
     const login = async(email,password)=>{
         try{
-            const res =await axios.post("http://localhost:5000/user/login",{
+            const res =await axios.post("https://backendofproducts.onrender.com/user/login",{
                 email,password
             })
             console.log("Full backend response:", res.data); 
