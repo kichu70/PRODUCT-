@@ -9,7 +9,7 @@ import "./Responsive.css";
 import Product from "../Product.jsx/Product";
 import React, { useState } from "react";
 import axios from "axios";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Confirm from "../Confirm/Confirm";
 import Edititem from "../Edit/Edititem";
@@ -147,19 +147,28 @@ const Iteams = () => {
             <Card className="Card">
               <h4 className="title">{item.title}</h4>
               {/* {item.image?.map((img,index)=>( */}
-              <Carousel>
-              {(Array.isArray(item.image) ? item.image : [item.image])?.map((img, index) =>(
-                <CardMedia
-                className="CardMedia"
-                sx={{ width: "100%", objectFit: "contain" }}
-                height="240px"
-                image={`http://localhost:5000/${img}`}
-                component="img"
-                title={`${item.title} - ${index + 1}`}
-                />
-              ))}
+              <Carousel
+                autoPlay={true}
+                interval={3000}
+                navButtonsAlwaysVisible={false}
+                indicators={false}
+              >
+                {(Array.isArray(item.image) ? item.image : [item.image])?.map(
+                  (img, index) => (
+                    //the working is first check the item.image is an array or not if it is not then it will wrapp
+                    //[item.image] like this it used to prevent error on mapping maping only works for the array
+                    <CardMedia
+                      className="CardMedia"
+                      sx={{ width: "100%", objectFit: "contain" }}
+                      height="240px"
+                      image={`http://localhost:5000/${img}`}
+                      component="img"
+                      title={`${item.title} - ${index + 1}`}
+                    />
+                  )
+                )}
               </Carousel>
-              
+
               <CardContent>
                 <Typography
                   className="discription"
@@ -170,13 +179,7 @@ const Iteams = () => {
                 </Typography>
                 <h3 className="price">₹ {item.price}</h3>
               </CardContent>
-              {/* <Button
-                className="viewbtn"
-                variant="contained"
-                onClick={() => navigate(`/viewProduct/${item.id}`)}
-              >
-                View product
-              </Button> */}
+
               {item.user === userId && (
                 <div className="btns">
                   <Button
@@ -191,7 +194,7 @@ const Iteams = () => {
                     variant="contained"
                     color="success"
                     size="small"
-                    onClick={() => hadleUpdate(item.id,item)}
+                    onClick={() => hadleUpdate(item.id, item)}
                   >
                     edit
                   </Button>
@@ -211,40 +214,37 @@ const Iteams = () => {
         }}
       />
 
-
-
       {openEdit && (
         <Edititem
-        open={openEdit}
-        Product={selectProduct}
-        id={editid}
-        onClose={(updatedProduct) => {
-          setopenEdit(false);
-          
-          if (updatedProduct) {
-            setItem((prev) =>
-              prev.map((p) =>
-                p.id === updatedProduct._id
+          open={openEdit}
+          Product={selectProduct}
+          id={editid}
+          onClose={(updatedProduct) => {
+            setopenEdit(false);
+
+            if (updatedProduct) {
+              setItem((prev) =>
+                prev.map((p) =>
+                  p.id === updatedProduct._id
                     ? { id: updatedProduct._id, ...updatedProduct }
                     : p
-                  )
-                );
-              }
-            }}
-            />
-          )}
-      
-        {openAddProduct && (
-                <Addproduct
-                  open={openAddProduct}
-                  onAdd={reloadComponent}
-                  onSuccess={notify4}
-                  onClose={() => {
-                    setOpenAddProduct(false);
-                  }}
-                 
-                />
-              )}
+                )
+              );
+            }
+          }}
+        />
+      )}
+
+      {openAddProduct && (
+        <Addproduct
+          open={openAddProduct}
+          onAdd={reloadComponent}
+          onSuccess={notify4}
+          onClose={() => {
+            setOpenAddProduct(false);
+          }}
+        />
+      )}
 
       <div className="pagination">
         <Button

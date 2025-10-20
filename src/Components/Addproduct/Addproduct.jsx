@@ -76,8 +76,8 @@ const Addproduct = ({ open, onClose, onAdd, onSuccess }) => {
   };
 
   const removeImage = (index) => {
-    setImage((prev) => prev.filter((_, i) => i !== index));
-    setImagePreview((prev) => prev.filter((_, i) => i !== index));
+    setImage((prev) => prev.filter((currentElement, i) => i !== index));
+    setImagePreview((prev) => prev.filter((currentElement, i) => i !== index));
   };
   return (
     <div className="main-edit" ref={addref}>
@@ -100,7 +100,7 @@ const Addproduct = ({ open, onClose, onAdd, onSuccess }) => {
             onChange={(e) => setProductDescription(e.target.value)}
             value={productDescription}
             className="textEditField"
-            label="discription"
+            label="description"
             variant="filled"
             focused
           />
@@ -120,32 +120,16 @@ const Addproduct = ({ open, onClose, onAdd, onSuccess }) => {
             onChange={handleImageChange}
             className="textEditField"
           />
-          <div style={{ display: "flex", gap: "5px", marginTop: "10px" }}>
-            {imagePreview.map((src, idx) => (
-              <div key={idx} style={{ position: "relative" }}>
+          <div className="imagePreview" >
+            {imagePreview.map((src, idx) => (//idx means index of the image op previeimage
+              <div className="imgPrev2" key={idx}>
                 <img
                   key={idx}
                   src={src}
                   alt={`preview-${idx}`}
                   style={{ width: "30px", height: "30px", objectFit: "cover" }}
                 />
-                <button
-                  onClick={() => removeImage(idx)}
-                  style={{
-                    position: "absolute",
-                    top: "-5px",
-                    right: "-5px",
-                    background: "red",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "15px",
-                    height: "15px",
-                    cursor: "pointer",
-                    fontSize: "10px",
-                    padding: 0,
-                  }}
-                >
+                <button id="xBtn" onClick={() => removeImage(idx)}>
                   x
                 </button>
               </div>
