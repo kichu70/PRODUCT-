@@ -68,3 +68,9 @@ h1 {
 p {
   color: aliceblue;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}

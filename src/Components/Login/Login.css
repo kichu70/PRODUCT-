@@ -18,3 +18,25 @@
 .login-sub label{
     color: rgb(127, 127, 203) !important;
 }
+
+.signup{
+    display: flex;
+    margin: 0;
+    gap: 10px;
+    padding: 10px;
+    align-items: center;
+    
+}
+.signup h4{
+    margin: 0;
+    padding: 0;
+}
+.signup Button{
+    margin: auto 0;
+    padding: 0;
+    font-size: 11px;
+    /* border: 1px solid; */
+    color: rgb(48, 75, 227);
+    /* background-color: rgb(255, 255, 255); */
+
+}

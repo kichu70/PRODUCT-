@@ -1,30 +1,25 @@
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './Pages/Home';
 import ViewProduct from './Pages/ViewProduct';
 import Login from './Components/Login/Login';
 import { useAuth } from './auth/Authcontext';
-import Addproduct from './Components/Addproduct/Addproduct';
+import SignUp from './Components/SignUp/SignUp';
 
 
 function App() {
   const { user } = useAuth();
   return (
     <div className="App">
+      
       <BrowserRouter>
-
-{/* <Addproduct/> */}
-
-
-        {user?(
       <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/viewProduct/:id' element={<ViewProduct/>}/>
+        <Route path='/login' element={user ? <Navigate to='/'/>:<Login/>}/>
+        <Route path='/signup' element={ <SignUp /> }/>
+        <Route path='/'  element={user ? <Home /> : <Navigate to="/login" />}/>
+        <Route path='/viewProduct/:id'element={user ? <ViewProduct /> : <Navigate to="/login" />}/>
       </Routes>
-        ):(
-          <Login/>
-        )}
       </BrowserRouter>
     </div>
   );

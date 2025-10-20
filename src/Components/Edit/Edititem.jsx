@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import "./Edititem.css"
 import axios from 'axios'
 import { Button, TextField } from '@mui/material'
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
   
 
@@ -27,7 +27,7 @@ useEffect(()=>{
 
   const UpdateProduct = async () => {
    try{
-    const res =await axios.put(`https://backendofproducts.onrender.com/product/update-product?id=${id}`,
+    const res =await axios.put(`http://localhost:5000/product/update-product?id=${id}`,
       {
         title:productTitle,
         description:productDescription,

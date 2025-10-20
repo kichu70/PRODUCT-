@@ -44,6 +44,10 @@ const navigate =useNavigate()
           variant="standard"
         />
         <Button type='submit' variant='contained' onClick={handleLogin}> login</Button>
+        <div className="signup">
+        <h4>Create new Account</h4>
+        <Button variant='conatied'onClick={()=>navigate('/signup')}>signup</Button>
+        </div>
       </div>
       </form>
     </div>
