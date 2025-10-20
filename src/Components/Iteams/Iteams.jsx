@@ -163,7 +163,7 @@ const Iteams = () => {
                       height="240px"
                       image={`http://localhost:5000/${img}`}
                       component="img"
-                      title={`${item.title} - ${index + 1}`}
+                      title={`${item.title} - ${index + 1}`}//the index +1 make the index humber to understand human eg first index  0 -> 1 , 1-> 2 etc 
                     />
                   )
                 )}
